@@ -8,28 +8,32 @@ import javax.swing.*;
 @SuppressWarnings("serial")
 public class LearnEnglishFrame extends JFrame{
 	
+	//静态变量
 	public static ImageIcon CORRECT_IMAGE = new ImageIcon("./Correct.jpg");
 	public static ImageIcon WRONG_IMAGE = new ImageIcon("./TianZhuWenHao.jpg");
 	public static ImageIcon PROBLEM_IMAGE = new ImageIcon("./Problem.jpg");
 
+	//图形化元素
 	public JLabel wordLabel = new JLabel("World");
 	public JLabel meaningLabel = new JLabel("Meaning");
-	//public JPanel wordAndMeaning = new JPanel();
-	//public JPanel logAndImage = new JPanel();
-	public JTextField textField = new JTextField(50);
+	public JTextField textField = new JTextField(46);
 	public JTextArea log = new JTextArea(10,40);
 	public JLabel imageLabel = new JLabel();
-	//public ImageIcon image = new ImageIcon("./correct.jpg");
-	JButton button = new JButton("review");
+	public JButton button = new JButton("review");
+	public JMenuBar menuBar = new JMenuBar();
+	public JMenu wordlistMenu = new JMenu("Choose Wordlist");
+	public JMenuItem CETMenuItem = new JMenuItem("CET-6");
+	public JMenuItem reviewMenuItem = new JMenuItem("Learn History");
 	
+	//公共成员变量
 	//public String word = null;
 	public ArrayList<Words> wordArrayList = new ArrayList<Words>();
 	public ArrayList<Words> reviewArrayList = new ArrayList<Words>();
 	public ArrayList<Words> arrayListUsingNow = null;
 	public WordReader wordReader = null;
+	public TimeCounter timeCounter = new TimeCounter();
 	
-	TimeCounter timeCounter = new TimeCounter();
-	
+	//main方法
 	public static void main(String[] args) {
 		// TODO 自动生成的方法存根
 		//new LearnEnglishFrame().lunchFrame();
@@ -39,6 +43,11 @@ public class LearnEnglishFrame extends JFrame{
 	}
 	
 	public void lunchFrame() {
+		
+		//初始化Menu
+		menuBar.add(wordlistMenu);
+		wordlistMenu.add(CETMenuItem);
+		wordlistMenu.add(reviewMenuItem);
 		
 		//初始化显示单词和释义的Label
 		//JPanel wordAndMeaning = new JPanel(new GridLayout(1, 2));
@@ -51,6 +60,10 @@ public class LearnEnglishFrame extends JFrame{
 		meaningLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 25));
 		wordAndMeaning.add(wordLabel);
 		wordAndMeaning.add(meaningLabel);
+		
+		JPanel menuAndWordAndMeaning = new JPanel(new BorderLayout());
+		menuAndWordAndMeaning.add(menuBar, BorderLayout.NORTH);
+		menuAndWordAndMeaning.add(wordAndMeaning, BorderLayout.CENTER);
 
 		//初始化显示Log和图片
 		JScrollPane jsp = new JScrollPane(log);
@@ -80,10 +93,13 @@ public class LearnEnglishFrame extends JFrame{
 		//wordReader.showWord(wordArrayList);
 
 		//初始化Frame
-		this.add(wordAndMeaning, BorderLayout.NORTH);
+		//this.add(menuBar, BorderLayout.NORTH);
+		//this.add(wordAndMeaning, BorderLayout.NORTH);
+		this.add(menuAndWordAndMeaning, BorderLayout.NORTH);
 		this.add(logAndImage, BorderLayout.CENTER);
 		this.add(textFieldAndButton, BorderLayout.SOUTH);
 		
+		//this.setLocationRelativeTo(null);
 		this.setLocation(400,250);
 		this.pack();
 		this.setResizable(false);
@@ -106,9 +122,25 @@ public class LearnEnglishFrame extends JFrame{
 		textField.addActionListener(new TextFieldActionListener());
 		textField.addKeyListener(new TextFieldKeyListener());
 		button.addActionListener(new ButtonActionListener());
+		CETMenuItem.addActionListener(new MenuActionListener());
+		reviewMenuItem.addActionListener(new MenuActionListener());
 		
 		//debug
 		//System.out.println(meaningLabel.getFont());
+		
+	}
+	
+	private class MenuActionListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO 自动生成的方法存根
+			if(e.getSource() == CETMenuItem) {
+				
+			} else if (e.getSource() == reviewMenuItem) {
+				
+			}
+		}
 		
 	}
 	
@@ -188,5 +220,6 @@ public class LearnEnglishFrame extends JFrame{
 		wordReader.showWord(wordArrayList);
 		
 	}
-
+	
+	
 }
