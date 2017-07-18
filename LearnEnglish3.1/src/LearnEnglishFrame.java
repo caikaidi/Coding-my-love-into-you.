@@ -10,6 +10,7 @@ public class LearnEnglishFrame extends JFrame{
 	
 	public static ImageIcon CORRECT_IMAGE = new ImageIcon("./Correct.jpg");
 	public static ImageIcon WRONG_IMAGE = new ImageIcon("./TianZhuWenHao.jpg");
+	public static ImageIcon PROBLEM_IMAGE = new ImageIcon("./Problem.jpg");
 
 	public JLabel wordLabel = new JLabel("World");
 	public JLabel meaningLabel = new JLabel("Meaning");
@@ -27,6 +28,7 @@ public class LearnEnglishFrame extends JFrame{
 	public ArrayList<Words> arrayListUsingNow = null;
 	public WordReader wordReader = null;
 	
+	TimeCounter timeCounter = new TimeCounter();
 	
 	public static void main(String[] args) {
 		// TODO 自动生成的方法存根
@@ -50,13 +52,14 @@ public class LearnEnglishFrame extends JFrame{
 		wordAndMeaning.add(wordLabel);
 		wordAndMeaning.add(meaningLabel);
 
-		//初始化显示Log和图片的区域
+		//初始化显示Log和图片
 		JScrollPane jsp = new JScrollPane(log);
 		JPanel logAndImage = new JPanel();
 		logAndImage.add(jsp);
 		//imageLabel.setBounds(0, 0, 150, 150);
 		CORRECT_IMAGE.setImage(CORRECT_IMAGE.getImage().getScaledInstance(150, 150, Image.SCALE_DEFAULT));
 		WRONG_IMAGE.setImage(WRONG_IMAGE.getImage().getScaledInstance(150, 150, Image.SCALE_DEFAULT));
+		PROBLEM_IMAGE.setImage(PROBLEM_IMAGE.getImage().getScaledInstance(150, 150, Image.SCALE_DEFAULT));
 		imageLabel.setIcon(CORRECT_IMAGE);
 		logAndImage.add(imageLabel);
 		
@@ -86,6 +89,9 @@ public class LearnEnglishFrame extends JFrame{
 		this.setResizable(false);
 		this.setVisible(true);
 		
+		//初始化光标位置
+		textField.grabFocus();
+		
 		//初始化Listener
 		this.addWindowListener(new WindowAdapter(){
 
@@ -98,6 +104,7 @@ public class LearnEnglishFrame extends JFrame{
 		});
 		arrayListUsingNow = wordArrayList;
 		textField.addActionListener(new TextFieldActionListener());
+		textField.addKeyListener(new TextFieldKeyListener());
 		button.addActionListener(new ButtonActionListener());
 		
 		//debug
@@ -110,9 +117,10 @@ public class LearnEnglishFrame extends JFrame{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO 自动生成的方法存根
+			timeCounter.stop();
 			if(textField.getText().trim().equals(arrayListUsingNow.get(wordReader.i).word.trim())) {
-				//Right
-				 log.append(arrayListUsingNow.get(wordReader.i).toString());
+				 //Right
+				 log.append(arrayListUsingNow.get(wordReader.i).toString()+"..."+timeCounter.showTime());
 				 log.append("\n");
 				 log.setCaretPosition(log.getText().length());
 				 wordReader.showWord(arrayListUsingNow);
@@ -122,6 +130,7 @@ public class LearnEnglishFrame extends JFrame{
 				//Wrong
 				log.append("Wrong Spell:\n");
 				log.append(arrayListUsingNow.get(wordReader.i).word + " NOT " + textField.getText());
+				//timeCounter.showTime();
 				log.append("\n");
 				log.setCaretPosition(log.getText().length());
 				imageLabel.setIcon(WRONG_IMAGE);
@@ -129,6 +138,29 @@ public class LearnEnglishFrame extends JFrame{
 			textField.setText("");
 		}
 		
+	}
+	
+	private class TextFieldKeyListener extends KeyAdapter {
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			// TODO 自动生成的方法存根
+			
+			//System.out.println(System.currentTimeMillis());
+			if(e.getKeyCode()>=KeyEvent.VK_A & e.getKeyCode()<=KeyEvent.VK_Z) {	
+				//start
+				timeCounter.start();
+				//System.out.println(timeCounter.flag);
+				//System.out.println(timeCounter.timeUsed);
+			}else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				//stop
+				//timeCounter.stop();
+				
+			}else {
+				//change pic
+				imageLabel.setIcon(PROBLEM_IMAGE);
+			}
+		}
 	}
 	
 	private class ButtonActionListener implements ActionListener {
